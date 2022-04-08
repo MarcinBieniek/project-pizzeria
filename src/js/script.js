@@ -98,7 +98,7 @@
         const active = document.querySelector(select.all.menuProductsActive);
 
         /* if there is active product and it's not thisProduct.element, remove class active from it */
-        if(active != null && active != thisProduct.element){
+        if(active && active !== clickableTrigger){
           active.classList.remove(classNames.menuProduct.wrapperActive); 
         }
 
