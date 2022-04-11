@@ -65,7 +65,6 @@
       thisProduct.initOrderForm();
       thisProduct.processOrder();
 
-      console.log('new Product:', thisProduct);
     }
 
     renderInMenu(){
@@ -93,6 +92,8 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
+    
     }
 
     initAccordion(){
@@ -159,22 +160,9 @@
           // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
           const option = param.options[optionId];
           
-          /* params: {
-          coffee: { // to jest 'paramId' - sama nazwa właściwości
-            // to jest w stałej 'param'
-            label: 'Coffee type',
-            type: 'radios',
-            options: { // to jest zapisane jako 'optionId' - sama nazwia
-              // to jest w zmiennej 'option'
-              latte: {label: 'Latte', price: 1, default: true},
-              cappuccino: {label: 'Cappuccino', price: 1},
-              espresso: {label: 'Espresso', price: 1},
-              macchiato : {label: 'Macchiato ', price: 1},
-            },
-          },*/
-
           // check if there is param with a name of paramId in formData and if it includes optionId
-          if(formData[paramId] && formData[paramId].includes(optionId)) {
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+          if(optionSelected) {
             // check if the option is not default
             if(option !== option.default) {
               let optionPrice = option.price;
@@ -189,6 +177,17 @@
             }
           }
 
+          // Tutaj zaczynamy nasz kod dotyczący włączania obrazkow
+
+          const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
+
+          if(optionImage){
+            if(optionSelected){
+              optionImage.classList.add(classNames.menuProduct.imageVisible)
+            } else {
+              optionImage.classList.remove(classNames.menuProduct.imageVisible)
+            }
+          }  
         }
       }
     
@@ -203,8 +202,6 @@
 
     initMenu: function(){
       const thisApp = this;  
-      
-      console.log('thisApp.data:', thisApp.data);
 
       for (let productData in thisApp.data.products){
         new Product(productData, thisApp.data.products[productData]);
