@@ -43,8 +43,8 @@
   const settings = {
     amountWidget: {
       defaultValue: 1,
-      defaultMin: 1,
-      defaultMax: 9,
+      defaultMin: 0,
+      defaultMax: 10,
     }
   };
 
@@ -213,8 +213,6 @@
       thisWidget.setValue(thisWidget.input.value);
       thisWidget.initActions();
 
-      console.log('AmountWidget:', thisWidget);
-      console.log('constructor arguments:', element);
     }
 
     getElements(element){
@@ -230,13 +228,18 @@
       const thisWidget = this;
 
       const newValue = parseInt(value);
+      
+      const maxAmount = settings.amountWidget.defaultMax;
+      const minAmount = settings.amountWidget.defaultMin;
 
-      if(thisWidget.value !== newValue && !isNaN(newValue)){
+      if(thisWidget.value !== newValue && 
+        !isNaN(newValue) && 
+        newValue <= maxAmount && 
+        newValue >= minAmount){
         thisWidget.value = newValue;
-      }   
+      }
 
       thisWidget.input.value = thisWidget.value;
-
     }
 
     initActions(){
@@ -252,7 +255,7 @@
 
         event.preventDefault();
 
-        thisWidget.setValue(thisWidget.value -= 1);
+        thisWidget.setValue(thisWidget.value -1);
 
       });
 
@@ -260,18 +263,9 @@
 
         event.preventDefault();
 
-        thisWidget.setValue(thisWidget.value += 1);
+        thisWidget.setValue(thisWidget.value +1);
 
       });
-
-
-
-
-
-      
-
-
-
 
     }
 
