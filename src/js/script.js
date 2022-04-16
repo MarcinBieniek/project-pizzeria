@@ -186,6 +186,7 @@
       thisProduct.dom.cartButton.addEventListener('click', function(event){
         event.preventDefault();
         thisProduct.processOrder();
+        thisProduct.addToCart();
       });
 
     }
@@ -239,10 +240,69 @@
         }
       }
     
+      thisProduct.priceSingle = price; 
+
       // update calculated price in the HTML
       price *= thisProduct.amountWidget.value;
       thisProduct.dom.priceElem.innerHTML = price;
     }
+
+    addToCart(){
+      const thisProduct = this;
+
+      app.cart.add(thisProduct.prepareCartProduct());
+    }
+
+    prepareCartProduct(){
+      const thisProduct = this;
+
+      const productSummary = {
+
+      id: thisProduct.id,
+      name: thisProduct.data.name,
+      amount: thisProduct.dom.amountWidgetElem,
+      priceSingle: thisProduct.priceSingle,
+      price: thisProduct.amountWidget.value * thisProduct.priceSingle,
+      params: thisProduct.prepareCartProductParams(),
+
+      };
+
+      return productSummary;
+
+    }
+
+    prepareCartProductParams(){
+      const thisProduct = this;
+    
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      const params = {};
+    
+      // for every category (param)
+      for(let paramId in thisProduct.data.params) {
+        const param = thisProduct.data.params[paramId];
+    
+        // create category param in params
+        params[paramId] = {
+          label: param.label,
+          options: {}
+        }
+
+        // for every option in this category
+        for(let optionId in param.options) {
+          const option = param.options[optionId];
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+
+          if(optionSelected) {
+            // option is selected!
+            params[paramId].options[paramId] = option.label;
+          }
+        }
+      }  
+
+      return params;
+
+    }
+
   }
 
   class AmountWidget{
@@ -333,7 +393,6 @@
           thisCart.getElements(element);
           thisCart.initActions();
 
-          console.log('new Cart', thisCart);
       }
 
       getElements(element){
@@ -343,8 +402,10 @@
 
         thisCart.dom.wrapper = element;
         thisCart.dom.toggleTrigger = thisCart.dom.wrapper.querySelector(select.cart.toggleTrigger);
-      
-        console.log('toggle trigger is: ', thisCart.dom.toggleTrigger)
+        thisCart.dom.productList = document.querySelector(select.cart.productList);
+
+        console.log('display product list:', thisCart.dom.productList)
+
       }
 
       initActions(){
@@ -355,8 +416,24 @@
         toggleBacketClass.addEventListener('click', function(){
           thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
         });
+      }
+
+      add(menuProduct){
+        const thisCart = this;
+
+        // generate HTML based on template 
+        const generatedHTML = templates.cartProduct(menuProduct);
+
+        // create element using utils.createElementFromHTML
+        const generatedDOM = utils.createDOMFromHTML(generatedHTML);
+
+        // add element to menu 
+        thisCart.dom.productList.appendChild(generatedDOM);
 
       }
+
+        
+      
   }
 
   const app = {
