@@ -108,17 +108,6 @@
       thisProduct.prepareCartProductParams();
     }
 
-    initAmountWidget(){
-      const thisProduct = this;
-
-      thisProduct.amountWidget  = new AmountWidget(thisProduct.dom.amountWidgetElem);
-      
-      thisProduct.dom.amountWidgetElem.addEventListener('updated', function(){
-        thisProduct.processOrder();
-      });
-    
-    }
-
     renderInMenu(){
       const thisProduct = this;
 
@@ -149,6 +138,17 @@
       thisProduct.dom.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
       thisProduct.dom.amountWidgetElem = thisProduct.element.querySelector(select.menuProduct.amountWidget);
 
+    }
+
+    initAmountWidget(){
+      const thisProduct = this;
+
+      thisProduct.dom.amountWidget  = new AmountWidget(thisProduct.dom.amountWidgetElem);
+      
+      thisProduct.dom.amountWidgetElem.addEventListener('updated', function(){
+        thisProduct.processOrder();
+      });
+    
     }
 
     initAccordion(){
@@ -249,7 +249,7 @@
       thisProduct.priceSingle = price; 
 
       // update calculated price in the HTML
-      price *= thisProduct.amountWidget.value;
+      price *= thisProduct.dom.amountWidget.value;
       thisProduct.dom.priceElem.innerHTML = price;
     }
 
@@ -266,9 +266,9 @@
 
       id: thisProduct.id,
       name: thisProduct.data.name,
-      amount: thisProduct.dom.amountWidgetElem,
+      amount: thisProduct.dom.amountWidget.value,
       priceSingle: thisProduct.priceSingle,
-      price: thisProduct.amountWidget.value * thisProduct.priceSingle,
+      price: thisProduct.dom.amountWidget.value * thisProduct.priceSingle,
       params: thisProduct.prepareCartProductParams(),
 
       };
@@ -431,7 +431,7 @@
           thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
         });
 
-        thisCart.dom.productList.addEventListener('uptaded', function(){
+        thisCart.dom.productList.addEventListener('updated', function(){
           thisCart.update();
         });
 
@@ -444,17 +444,6 @@
           thisCart.sendOrder();
         });
       }
-
-      remove(event){
-        const thisCart = this;
-
-        const indexOfProductToRemove = thisCart.products.indexOf(event.detail.cartProduct);
-
-        thisCart.products.splice(indexOfProductToRemove, 1);
-
-        thisCart.update();
-  
-        }
 
       add(menuProduct){
         const thisCart = this;
@@ -482,12 +471,10 @@
         
         for(let cartProduct of thisCart.products){
           thisCart.totalNumber = cartProduct.amount + thisCart.totalNumber; 
-          thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
-          
           thisCart.subtotalPrice = cartProduct.price + thisCart.subtotalPrice;
+          thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
+          thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
         }
-
-        thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
 
         if(thisCart.totalNumber === 0){
           thisCart.totalPrice = 0;
@@ -497,17 +484,29 @@
           thisCart.totalPrice = thisCart.subtotalPrice + thisCart.deliveryFee;
         }
 
+        thisCart.dom.deliveryFee.innerHTML = thisCart.deliveryFee;
+
         for(let totalPrices of thisCart.dom.totalPrice){
         totalPrices.innerHTML = thisCart.totalPrice;
         }
 
         thisCart.dom.deliveryFee.innerHTML = thisCart.deliveryFee;
-
-        console.log('totalNumber is:', thisCart.totalNumber)
-        console.log('subtotalPrice is:', thisCart.subtotalPrice)
-        console.log('totalPrice is:', thisCart.totalPrice)
+        thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
+        thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
+        thisCart.dom.totalPrice.innerHTML = thisCart.totalPrice;
 
       }
+
+      remove(event){
+        const thisCart = this;
+
+        const indexOfProductToRemove = thisCart.products.indexOf(event.detail.cartProduct);
+
+        thisCart.products.splice(indexOfProductToRemove, 1);
+
+        thisCart.update();
+  
+        }
 
       sendOrder(){
         const thisCart = this;
@@ -523,8 +522,6 @@
           deliveryFee: thisCart.deliveryFee,
           products: [],
         }; 
-
-        console.log('payload', payload);
 
         for(let prod of thisCart.products) {
           payload.products.push(prod.getData());
