@@ -469,8 +469,7 @@
         thisCart.dom.productList.appendChild(generatedDOM);
 
         // create new single product class in basket
-        thisCart.products.push(menuProduct);
-        console.log(new CartProduct(menuProduct, generatedDOM))
+        thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
         thisCart.update();
       }
 
@@ -483,10 +482,12 @@
         
         for(let cartProduct of thisCart.products){
           thisCart.totalNumber = cartProduct.amount + thisCart.totalNumber; 
-          thisCart.subtotalPrice = cartProduct.price + thisCart.subtotalPrice;
           thisCart.dom.totalNumber.innerHTML = thisCart.totalNumber;
-          thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
+          
+          thisCart.subtotalPrice = cartProduct.price + thisCart.subtotalPrice;
         }
+
+        thisCart.dom.subtotalPrice.innerHTML = thisCart.subtotalPrice;
 
         if(thisCart.totalNumber === 0){
           thisCart.totalPrice = 0;
@@ -496,13 +497,11 @@
           thisCart.totalPrice = thisCart.subtotalPrice + thisCart.deliveryFee;
         }
 
-
-
-        thisCart.dom.deliveryFee.innerHTML = thisCart.deliveryFee;
-
         for(let totalPrices of thisCart.dom.totalPrice){
         totalPrices.innerHTML = thisCart.totalPrice;
         }
+
+        thisCart.dom.deliveryFee.innerHTML = thisCart.deliveryFee;
 
         console.log('totalNumber is:', thisCart.totalNumber)
         console.log('subtotalPrice is:', thisCart.subtotalPrice)
