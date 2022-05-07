@@ -38,7 +38,7 @@ const app = {
         /* change URL hash */
         window.location.hash = '#/' + id;
 
-      })
+      });
     }
 
   },
@@ -48,7 +48,7 @@ const app = {
 
     /* add class "active" to marching pages, remove from non-matching */
     for(let page of thisApp.pages){
-        page.classList.toggle(classNames.pages.active, page.id == pageId);
+      page.classList.toggle(classNames.pages.active, page.id == pageId);
     }
 
     /* add class "active" to marching links, remove from non-matching */
@@ -56,7 +56,7 @@ const app = {
       link.classList.toggle(
         classNames.nav.active, 
         link.getAttribute('href') == '#' + pageId
-        );
+      );
     }
 
   },

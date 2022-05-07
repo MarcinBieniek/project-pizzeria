@@ -80,10 +80,10 @@ export const classNames = {
     tableBooked: 'booked',
   },
   nav: {
-      active: 'active',
+    active: 'active',
   },
   pages: {
-      active: 'active',
+    active: 'active',
   }
 };
   
@@ -101,10 +101,10 @@ export const settings = {
     close: 24,
   },
   datePicker: {
-      maxDaysInFuture: 14,
+    maxDaysInFuture: 14,
   },
   booking: {
-      tableIdAttribute: 'data-table',
+    tableIdAttribute: 'data-table',
   },
   db: {
     url: '//localhost:3131',

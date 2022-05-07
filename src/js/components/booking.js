@@ -1,62 +1,76 @@
-import {templates, select} from '../settings.js';
+import {settings, templates, select} from '../settings.js';
+import utils from '../utils.js';
 import AmountWidget from './amountWidget.js';
 import DatePicker from './datePicker.js';
 import HourPicker from './hourPicker.js';
 
 class Booking{
-    constructor(element){
-        const thisBooking = this;
+  constructor(wrapper){
+    const thisBooking = this;
 
-        thisBooking.render(element);
-        thisBooking.initWidgets();
-    }
+    thisBooking.render(wrapper);
+    thisBooking.initWidgets();
+    thisBooking.getData();
 
-    render(element){
-        const thisBooking = this;
+  }
 
-        /* generate HTML code based on templates.bookingWidget */
-        const generatedHTML = templates.bookingWidget(element)
- 
-        /* create empty thisBooking.dom object */
-        
-        thisBooking.dom = {}
+  getData(){
+    const thisBooking = this; 
 
-        /* add to object property "wrapper", assing to it container reference */
-        thisBooking.dom.wrapper = element;
+    const startDateParam = settings.db.dateStartParamKey + '=' + utils.dateToStr(thisBooking.datePicker.minDate);
+    const endDateParam = settings.db.dateEndParamKey + '=' + utils.dateToStr(thisBooking.datePicker.maxDate);
 
-        /* change wrapper inner on generated HTML code */ 
-        thisBooking.dom.wrapper.innerHTML = generatedHTML;
+    const params = {
+      booking: [
+        startDateParam,
+        endDateParam,
+      ],
+      eventsCurrent: [
+        settings.db.notRepeatParam,
+        startDateParam,
+        endDateParam,
+      ],
+      eventsRepeat: [
+        endDateParam,
+      ],
+    };
 
-        // Part 2
+    const urls = {
+      booking: settings.db.url + '/' + settings.db.booking
+                                     + '?' + params.booking.join('&'),
+      eventsCurrent: settings.db.url + '/' + settings.db.event 
+                                           + '?' + params.eventsCurrent.join('&'),
+      eventsRepeat: settings.db.url + '/' + settings.db.event 
+                                          + '?' + params.eventsRepeat.join('&'),
+    };
 
-        thisBooking.dom.peopleAmount = document.querySelector(select.booking.peopleAmount);
-        thisBooking.dom.hoursAmount = document.querySelector(select.booking.hoursAmount);
-        thisBooking.dom.dateWidget = document.querySelector(select.widgets.datePicker.wrapper);
-        thisBooking.dom.hourWidget = document.querySelector(select.widgets.hourPicker.wrapper);
+    console.log('getData,url', urls);
+  }
 
-        console.log('thisBooking.dom.peopleAmount', thisBooking.dom.peopleAmount )
+  render(element){
+    const thisBooking = this;
 
-    }
+    const generatedHTML = templates.bookingWidget(element);
+    thisBooking.dom = {};
+    thisBooking.dom.wrapper = element;
+    thisBooking.dom.wrapper.innerHTML = generatedHTML;
 
-    initWidgets(){
-        const thisBooking = this;
+    thisBooking.dom.peopleAmount = document.querySelector(select.booking.peopleAmount);
+    thisBooking.dom.hoursAmount = document.querySelector(select.booking.hoursAmount);
+    thisBooking.dom.dateWidget = document.querySelector(select.widgets.datePicker.wrapper);
+    thisBooking.dom.hourWidget = document.querySelector(select.widgets.hourPicker.wrapper);
 
-        thisBooking.peopleAmount = new AmountWidget(thisBooking.dom.peopleAmount);
-        thisBooking.hoursAmount = new AmountWidget(thisBooking.dom.hoursAmount);
-        thisBooking.dateWidget = new DatePicker(thisBooking.dom.dateWidget);
-        thisBooking.hourWidget = new HourPicker(thisBooking.dom.hourWidget);
+  }
 
-        thisBooking.dom.peopleAmount.addEventListener('updated', function(){
+  initWidgets(){
+    const thisBooking = this;
 
-        });
+    thisBooking.peopleAmount = new AmountWidget(thisBooking.dom.peopleAmount);
+    thisBooking.hoursAmount = new AmountWidget(thisBooking.dom.hoursAmount);
+    thisBooking.dateWidget = new DatePicker(thisBooking.dom.dateWidget);
+    thisBooking.hourWidget = new HourPicker(thisBooking.dom.hourWidget);
 
-        thisBooking.dom.hoursAmount.addEventListener('updated', function(){
-
-        });
-
-
-
-    }
+  }
 }
 
 export default Booking;

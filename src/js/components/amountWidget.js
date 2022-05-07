@@ -43,7 +43,7 @@ class AmountWidget extends BaseWidget{
       thisWidget.value = thisWidget.dom.input.value;
 
 
-      console.log('thiswidget.dom', thisWidget.dom.input.value)
+      console.log('thiswidget.dom', thisWidget.dom.input.value);
 
     });
 
