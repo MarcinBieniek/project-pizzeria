@@ -43,6 +43,12 @@ export const select = {
     peopleAmount: '.people-amount',
     hoursAmount: '.hours-amount',
     tables: '.floor-plan .table',
+    tablesDiv: '.floor-plan',
+    phone: 'input[name="phone"]',
+    address: 'input[name="address"]',
+    starters: '.booking-form[name="starter"]',
+    form:'.order-confirmation[type="submit"]',
+    submitForm: '.btn-secondary'
   },
   nav: {
     links: '.main-nav a',
@@ -76,8 +82,10 @@ export const classNames = {
     wrapperActive: 'active',
   },
   booking: {
+    table: 'table',
     loading: 'loading',
     tableBooked: 'booked',
+    tableAvailable: 'selected',
   },
   nav: {
     active: 'active',
