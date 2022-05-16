@@ -2,6 +2,7 @@ import {settings, select, classNames, templates} from './settings.js';
 import Product from './components/product.js';
 import Cart from './components/cart.js';
 import Booking from './components/booking.js';
+import Home from './components/home.js';
   
 const app = {
 
@@ -22,7 +23,7 @@ const app = {
       }
     }
 
-    thisApp.activatePage(idFromHash);
+    thisApp.activatePage(pageMatchingHash);
 
     for(let link of thisApp.navLinks){
       link.addEventListener('click', function(event){
@@ -46,7 +47,7 @@ const app = {
   activatePage: function(pageId){
     const thisApp = this;
 
-    /* add class "active" to marching pages, remove from non-matching */
+    /* add class "active" to matching pages, remove from non-matching */
     for(let page of thisApp.pages){
       page.classList.toggle(classNames.pages.active, page.id == pageId);
     }
@@ -105,6 +106,15 @@ const app = {
 
     const bookingWrapper = document.querySelector(select.containerOf.booking);
     thisApp.booking = new Booking(bookingWrapper);
+    
+  },
+
+  initHome: function(){
+    const thisApp = this;
+
+    const homeWrapper = document.querySelector(select.containerOf.home);
+    thisApp.booking = new Home(homeWrapper);
+
   },
 
   init: function(){
@@ -119,6 +129,7 @@ const app = {
     thisApp.initData();
     thisApp.initCart();
     thisApp.initBooking();
+    thisApp.initHome(); 
   },
 };
 

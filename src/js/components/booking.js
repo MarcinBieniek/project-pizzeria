@@ -5,11 +5,11 @@ import DatePicker from './datePicker.js';
 import HourPicker from './hourPicker.js';
 
 class Booking{
-  constructor(wrapper){
+  constructor(element){
     const thisBooking = this;
 
     thisBooking.selectedTable = undefined;
-    thisBooking.render(wrapper);
+    thisBooking.render(element);
     thisBooking.initWidgets();
     thisBooking.getData();
   }
